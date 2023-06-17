@@ -1,0 +1,8 @@
+.header {
+  background-color: var(--extra-light-blue);
+}
+.theme--dark {
+  .header {
+    background-color: var(--primary-blue);
+  }
+}

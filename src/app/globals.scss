@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-blue: #1c4b82;
+  --secondary-blue: #466ca6;
+  --light-blue: #6c8ecc;
+  --extra-light-blue: #b9d8ff;
+  --dark-text: rgb(17, 21, 23);
+  --light-text: rgb(243, 250, 253);
+}
+*,
+* + * {
+  color: inherit;
+}
+
+body {
+  min-height: 100vh;
+  &--dark {
+    // colors variables for the dark mode :
+    // background color
+  }
+}
+.theme {
+  transition: all linear 0.2s;
+  min-height: 100vh;
+
+  &--light {
+    color: var(--dark-text);
+    background-color: var(--light-text);
+  }
+  &--dark {
+    color: var(--light-text);
+    background-color: var(--dark-text);
+  }
+}

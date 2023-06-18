@@ -9,9 +9,6 @@ function CountriesFilter({}: Props) {
   const [searchedValue, setSearchedValue] = useState('');
   const searchParams = useSearchParams()!;
   const router = useRouter();
-
-  const params = new URLSearchParams(searchParams.toString());
-
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -19,7 +16,7 @@ function CountriesFilter({}: Props) {
 
       return params.toString();
     },
-    [searchedValue]
+    [searchedValue, searchParams]
   );
   const removeQueryString = useCallback(
     (name: string) => {
@@ -28,7 +25,7 @@ function CountriesFilter({}: Props) {
 
       return params.toString();
     },
-    [searchedValue]
+    [searchedValue, searchParams]
   );
   return (
     <section className="py-4 px-8 w-full max-w-full">

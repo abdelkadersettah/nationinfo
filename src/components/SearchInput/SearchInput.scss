@@ -1,0 +1,36 @@
+.search-input {
+  display: flex;
+  box-sizing: border-box;
+  max-width: 200px;
+  width: 100%;
+
+  &__field {
+    padding: 0.5rem;
+    width: 100%;
+
+    padding-left: 0.8rem;
+    outline: none;
+    transition: all linear 0.2s;
+    border-color: var(--white);
+    font-size: 1rem;
+    border-radius: 8px 0 0 8px;
+    color: #000;
+    border: 1px solid #b9d8ff;
+  }
+  &__cta {
+    padding: 0.6rem;
+    color: var(--white);
+    background-color: #b9d8ff;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    color: #000;
+
+    border-radius: 0px 8px 8px 0;
+    display: flex;
+    align-items: center;
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+}

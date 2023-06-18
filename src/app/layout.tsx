@@ -1,3 +1,4 @@
+import Header from '@/components/Header/Header';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { Inter } from 'next/font/google';
 import './globals.scss';
@@ -18,7 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className}`}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <Header />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

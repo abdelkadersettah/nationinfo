@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props) {
 }
 
 async function CountryDetail({ params }: Props) {
-  const country = await getCountry(params.ccn3);
+  const country = await getCountry(params?.ccn3);
   const borderCountries = country[0]?.borders
     ? await getBorders(country[0].borders)
     : null;

@@ -7,7 +7,7 @@ async function getCountries() {
   const countries = await GET().then((res) => res.json());
   return countries;
 }
-async function countries({}: Props) {
+async function Page({}: Props) {
   const countries = await getCountries();
 
   return (
@@ -18,4 +18,4 @@ async function countries({}: Props) {
   );
 }
 
-export default countries;
+export default Page;

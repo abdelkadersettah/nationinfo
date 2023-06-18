@@ -11,7 +11,7 @@ export async function getCountriesByName(searchedKey: string) {
   return countries;
 }
 
-async function countries() {
+async function Page() {
   const searchParams = useSearchParams();
   const name = searchParams.get('name');
   const countries = await getCountriesByName(name ?? '');
@@ -23,4 +23,4 @@ async function countries() {
   );
 }
 
-export default countries;
+export default Page;

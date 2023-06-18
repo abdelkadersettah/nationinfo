@@ -1,24 +1,23 @@
 'use client';
 import Countries from '@/components/Countries/Countries';
 import CountriesFilter from '@/components/CountriesFilter/CountriesFilter';
-import { CountryDto } from '@/models/CountryDto';
 import { useSearchParams } from 'next/navigation';
+import useSWR from 'swr';
 
 async function Page() {
+  const fetcher = (url: any) => fetch(url).then((res) => res.json());
+
   const searchParams = useSearchParams();
   const name = searchParams.get('name');
-  async function getCountriesByName(searchedKey: string) {
-    const countries: Array<CountryDto> = await fetch(
-      `https://restcountries.com/v3.1/name/${searchedKey}`
-    ).then((res) => res.json());
-    return countries;
-  }
-  const countries = await getCountriesByName(name ?? '');
+  const { data } = useSWR(
+    `https://restcountries.com/v3.1/name/${name}`,
+    fetcher
+  );
 
   return (
     <section>
       <CountriesFilter />
-      <Countries data={countries} />
+      <Countries data={data} />
     </section>
   );
 }

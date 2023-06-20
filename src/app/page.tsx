@@ -1,4 +1,5 @@
 import Countries from '@/components/Countries/Countries';
+import CountriesFilter from '@/components/CountriesFilter/CountriesFilter';
 import { GET } from './api/route';
 
 type Props = {};
@@ -11,6 +12,8 @@ async function Page({}: Props) {
 
   return (
     <section>
+      <CountriesFilter />
+
       <Countries data={countries} />
     </section>
   );

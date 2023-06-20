@@ -1,3 +1,4 @@
+import CountriesFilter from '@/components/CountriesFilter/CountriesFilter';
 import Header from '@/components/Header/Header';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { Inter } from 'next/font/google';
@@ -21,6 +22,8 @@ export default function RootLayout({
       <body className={`${inter.className}`}>
         <ThemeProvider>
           <Header />
+          <CountriesFilter />
+
           {children}
         </ThemeProvider>
       </body>

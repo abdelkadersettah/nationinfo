@@ -32,7 +32,7 @@ const SearchInput: React.FC<IProps> = ({
         }}
       />
       <button
-        className="search-input__cta"
+        className="search-input__cta bg-[#b9d8ff]"
         type="button"
         onClick={(e) => {
           if (onSearch) {

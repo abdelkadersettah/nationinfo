@@ -18,6 +18,11 @@ async function Page() {
     <section>
       <CountriesFilter />
       <Countries data={data} />
+      {data && (
+        <section className="p-8 h-100 flex flex-col items-center justify-center gap-8">
+          <h2>Not Found</h2>
+        </section>
+      )}
     </section>
   );
 }

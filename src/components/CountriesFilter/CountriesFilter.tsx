@@ -16,7 +16,7 @@ function CountriesFilter({}: Props) {
 
       return params.toString();
     },
-    [searchedValue, searchParams]
+    [searchParams]
   );
   const removeQueryString = useCallback(
     (name: string) => {
@@ -25,7 +25,7 @@ function CountriesFilter({}: Props) {
 
       return params.toString();
     },
-    [searchedValue, searchParams]
+    [searchParams]
   );
   return (
     <section className="py-4 px-8 w-full max-w-full">

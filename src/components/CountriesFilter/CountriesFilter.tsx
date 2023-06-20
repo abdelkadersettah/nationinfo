@@ -33,10 +33,13 @@ function CountriesFilter({}: Props) {
         value={searchedValue}
         onSearch={(searchedKey) => {
           if (!searchedKey) {
-            router.push('/' + '?' + removeQueryString('name'));
+            router.push('/' + '?' + removeQueryString('name'), {
+              shallow: true,
+            });
           } else {
             router.push(
-              'search' + '?' + createQueryString('name', searchedValue)
+              'search' + '?' + createQueryString('name', searchedValue),
+              { shallow: true }
             );
           }
         }}

@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import './SearchInput.scss';
 
@@ -18,6 +19,7 @@ const SearchInput: React.FC<IProps> = ({
   onSearch,
   value,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   return (
     <div className="search-input" data-testid="search-input">
       <input
@@ -26,17 +28,15 @@ const SearchInput: React.FC<IProps> = ({
         className="search-input__field"
         name={name}
         id={name}
+        ref={inputRef}
         value={value}
-        onChange={(e) => {
-          onValueChange && onValueChange(e.target.value);
-        }}
       />
       <button
         className="search-input__cta bg-[#b9d8ff]"
         type="button"
         onClick={(e) => {
           if (onSearch) {
-            onSearch(value ?? '');
+            onSearch(inputRef?.current?.value ?? '');
           }
         }}
         // disabled={!value}

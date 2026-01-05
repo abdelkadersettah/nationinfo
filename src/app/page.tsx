@@ -1,64 +1,63 @@
-'use client';
-import Countries from '@/components/Countries/Countries';
-import Loader from '@/components/Loader/Loader';
-import SearchInput from '@/components/SearchInput/SearchInput';
-import { useState } from 'react';
-import useSWR from 'swr';
+import Countries from "@/components/Countries/Countries";
+import SearchInputClient from "@/components/SearchInput/SearchInputClient";
+import { getCountries } from "@/services/countryService";
+import { Suspense } from "react";
+import Loader from "@/components/Loader/Loader";
 
-type Props = {};
-const fetcher = (url: string) => 
-  fetch(url)
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      return res.json();
-    })
-    .catch((error) => {
-      console.error("Fetch error:", error);
-      throw error;
-    });
+interface PageProps {
+  searchParams: Promise<{ search?: string }> | { search?: string };
+}
 
-// SWR configuration for better caching and performance
-const swrConfig = {
-  revalidateOnFocus: false, // Don't revalidate when window gets focused
-  revalidateOnReconnect: true, // Revalidate when network reconnects
-  dedupingInterval: 60000, // Dedupe requests within 60 seconds
-  errorRetryCount: 3, // Retry failed requests up to 3 times
-  errorRetryInterval: 5000, // Wait 5 seconds between retries
-};
+async function CountriesList({ search }: { search?: string }) {
+  try {
+    const countries = await getCountries(search);
 
-function Page({}: Props) {
-  const [searchedValue, setSearchedValue] = useState('');
-  const {
-    data: countries,
-    error,
-    isLoading,
-  } = useSWR(
-    `/api${searchedValue ? `?search=${encodeURIComponent(searchedValue)}` : ''}`,
-    fetcher,
-    swrConfig
-  );
+    if (!countries || countries.length === 0) {
+      return (
+        <section className="p-8 h-100 flex flex-col items-center justify-center gap-8">
+          <h2>No countries found</h2>
+          <p className="text-gray-500">
+            {search ? `No results for "${search}"` : "No countries available"}
+          </p>
+        </section>
+      );
+    }
+
+    return <Countries data={countries} />;
+  } catch (error) {
+    console.error("Error fetching countries:", error);
+    return (
+      <section className="p-8 h-100 flex flex-col items-center justify-center gap-8">
+        <h2>Error loading countries</h2>
+        <p className="text-gray-500">Please try again later.</p>
+      </section>
+    );
+  }
+}
+
+async function Page({ searchParams }: PageProps) {
+  // Handle both Promise and object for Next.js 13+ compatibility
+  const params =
+    searchParams instanceof Promise ? await searchParams : searchParams;
+  const search = params?.search;
+
   return (
     <section>
       <section className="py-4 px-8 w-full max-w-full">
-        <SearchInput
-          onSearch={(searchedKey) => {
-            setSearchedValue(searchedKey);
-          }}
-        />
+        <Suspense fallback={<div className="h-12" />}>
+          <SearchInputClient />
+        </Suspense>
       </section>
-      <Countries data={countries} />
-      {countries?.status === 404 && (
-        <section className="p-8 h-100 flex flex-col items-center justify-center gap-8">
-          <h2>Not Found</h2>
-        </section>
-      )}
-      {isLoading && (
-        <section className="p-8 h-100 flex flex-col items-center justify-center gap-8">
-          <Loader />
-        </section>
-      )}
+      <Suspense
+        key={search} // Re-fetch when search changes
+        fallback={
+          <section className="p-8 h-100 flex flex-col items-center justify-center gap-8">
+            <Loader />
+          </section>
+        }
+      >
+        <CountriesList search={search} />
+      </Suspense>
     </section>
   );
 }

@@ -1,17 +1,43 @@
 import {
   getCountryByCcn3,
   getCountriesByCodes,
+  getCountries,
 } from "@/services/countryService";
 import Image from "next/image";
 import Link from "next/link";
 import { BiArrowBack } from "react-icons/bi";
 
 type Props = {
-  params: { ccn3: string };
+  params: Promise<{ ccn3: string }> | { ccn3: string };
 };
 
+/**
+ * Generate static params for all countries at build time
+ * This pre-renders all country detail pages for better performance
+ */
+export async function generateStaticParams() {
+  try {
+    const countries = await getCountries();
+
+    // Return array of params for each country
+    // Use ccn3, cca2, cca3, or cioc as fallback
+    return countries
+      .map((country) => ({
+        ccn3:
+          country.ccn3 || country.cca2 || country.cca3 || country.cioc || "",
+      }))
+      .filter((param) => param.ccn3); // Filter out any empty values
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    // Return empty array if fetch fails - pages will be generated on-demand
+    return [];
+  }
+}
+
 export async function generateMetadata({ params }: Props) {
-  const country = await getCountryByCcn3(params.ccn3);
+  // Handle both Promise and object for Next.js 13+ compatibility
+  const resolvedParams = params instanceof Promise ? await params : params;
+  const country = await getCountryByCcn3(resolvedParams.ccn3);
 
   return {
     title: `NationInfo: ${country[0]?.name?.common}`,
@@ -21,7 +47,9 @@ export async function generateMetadata({ params }: Props) {
 }
 
 async function CountryDetail({ params }: Props) {
-  const country = await getCountryByCcn3(params?.ccn3);
+  // Handle both Promise and object for Next.js 13+ compatibility
+  const resolvedParams = params instanceof Promise ? await params : params;
+  const country = await getCountryByCcn3(resolvedParams.ccn3);
   const borderCountries = country[0]?.borders
     ? await getCountriesByCodes(country[0].borders)
     : null;

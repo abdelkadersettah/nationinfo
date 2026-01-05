@@ -6,7 +6,28 @@ import { useState } from 'react';
 import useSWR from 'swr';
 
 type Props = {};
-const fetcher = (url: any) => fetch(url).then((res) => res.json());
+const fetcher = (url: string) => 
+  fetch(url)
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      return res.json();
+    })
+    .catch((error) => {
+      console.error("Fetch error:", error);
+      throw error;
+    });
+
+// SWR configuration for better caching and performance
+const swrConfig = {
+  revalidateOnFocus: false, // Don't revalidate when window gets focused
+  revalidateOnReconnect: true, // Revalidate when network reconnects
+  dedupingInterval: 60000, // Dedupe requests within 60 seconds
+  errorRetryCount: 3, // Retry failed requests up to 3 times
+  errorRetryInterval: 5000, // Wait 5 seconds between retries
+};
+
 function Page({}: Props) {
   const [searchedValue, setSearchedValue] = useState('');
   const {
@@ -14,10 +35,9 @@ function Page({}: Props) {
     error,
     isLoading,
   } = useSWR(
-    `https://restcountries.com/v3.1/${
-      searchedValue ? 'name/' + searchedValue : 'all'
-    }`,
-    fetcher
+    `/api${searchedValue ? `?search=${encodeURIComponent(searchedValue)}` : ''}`,
+    fetcher,
+    swrConfig
   );
   return (
     <section>
